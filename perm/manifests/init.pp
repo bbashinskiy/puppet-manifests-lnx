@@ -1,7 +1,7 @@
 class perm::config {
 	file {
 		'/etc':
-          nsure => directory,
+          ensure => directory,
 		      mode => 'o-w',
 		      recurse => true;
 

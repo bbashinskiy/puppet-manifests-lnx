@@ -31,14 +31,14 @@ class sudo::config {
                 ensure => present,
 		owner => 'root',
                 group => 'root',
-                source => 'puppet:///modules/sudo/010_STD_ALIAS_GLB';
+                source => 'puppet:///modules/sudo/010_STD_ALIAS_GLB',
                 mode => 440;
 	
 		'/etc/sudoers.d/010_STD_NEG_GLB':
                 ensure => present,
 		owner => 'root',
                 group => 'root',
-                source => 'puppet:///modules/sudo/010_STD_NEG_GLB';
+                source => 'puppet:///modules/sudo/010_STD_NEG_GLB',
                 mode => 440;
 
 		'/etc/sudoers.d/4aa_STD_ALIAS_LCL':

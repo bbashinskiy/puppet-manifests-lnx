@@ -6,8 +6,8 @@ class xinet::install {
 
 class xinet::service {
 	service { "xinetd":
-		ensure => running,
-                enable => true
+		        ensure => running,
+            enable => true
         }
 }
 
@@ -15,18 +15,18 @@ class xinet::config {
 	file { 
 		'/etc/xinetd.conf':
                 	ensure 	=> present,
-			owner	=> "root",
-			group	=> "root",
-			mode	=> "644",
-			source  => "puppet:///modules/xinet/xinetd.conf";
+			            owner	=> "root",
+			            group	=> "root",
+			            mode	=> "644",
+			            source  => "puppet:///modules/xinet/xinetd.conf";
 
 		'/etc/xinet.d':
-			ensure  => directory,
+			            ensure  => directory,
                 	owner   => "root",
                 	group   => "root",
                 	mode    => "755",
-			recurse => true,
-        		purge   => true;
+			            recurse => true,
+        		      purge   => true;
 		
 		'/etc/xinetd.d/chargen-dgram':
                         ensure  => present,
@@ -116,5 +116,5 @@ class xinet::config {
 
 class xinet {
         include xinet::install, xinet::config, xinet::service
-	Class['xinet::install'] -> Class['xinet::config'] ~> Class['xinet::service']
+	      Class['xinet::install'] -> Class['xinet::config'] ~> Class['xinet::service']
 }

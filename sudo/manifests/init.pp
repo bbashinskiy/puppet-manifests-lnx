@@ -5,32 +5,27 @@ class sudo::install {
 }
 
 class sudo::config {
-	$groupperm = $operatingsystem ? {
-                'RedHat' => 'root',
-                'AIX' => 'system',
-        }
-
 	file {
 		'/etc/sudoers':
                 ensure => present,
                 owner => 'root',
-                group => "$groupperm",
+                group => root,
                 mode => 440,
                 source => 'puppet:///modules/sudo/sudoers';
 		
 		'/etc/sudo.env':
                 ensure => present,
                 owner => 'root',
-                group => "$groupperm",
+                group => root,
                 mode => 440,
                 source => 'puppet:///modules/sudo/sudo.env';
 	
 		'/etc/sudoers.d':
-		recurse => true,
-		purge => true,
+		            recurse => true,
+	  	          purge => true,
                 ensure => directory,
                 owner => 'root',
-                group => "$groupperm",
+                group => root,
                 mode => 440;
 		
 		'/etc/sudoers.d/010_STD_ALIAS_GLB':
@@ -137,10 +132,6 @@ class sudo::config {
 }
 
 class sudo {
-	if $operatingsystem == 'RedHat' {
 		include sudo::install, sudo::config
 		Class['sudo::install'] -> Class['sudo::config']
-	} elsif $operatingsystem == 'AIX' {
-		include sudo::config
-	}
 }

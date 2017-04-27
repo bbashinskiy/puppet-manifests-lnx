@@ -1,11 +1,11 @@
 class profile::config {
 	file { 
 		'/etc/profile':
-                	ensure 	=> present,
-			owner	=> "root",
-			group	=> "root",
-			mode	=> "644",
-			source  => "puppet:///modules/profile/profile";
+                	      ensure 	=> present,
+			                  owner	=> "root",
+			                  group	=> "root",
+			                  mode	=> "644",
+			                  source  => "puppet:///modules/profile/profile";
 
 		'/etc/csh.login':
                         ensure  => present,
@@ -15,12 +15,12 @@ class profile::config {
                         source  => "puppet:///modules/profile/csh.login";
 
 		['/etc/profile.d','/etc/skel']:
-			ensure  => directory,
-                	owner   => "root",
-                	group   => "root",
-                	mode    => "755",
-			recurse => true,
-        		purge   => true;
+			                  ensure  => directory,
+                	      owner   => "root",
+                	      group   => "root",
+                	      mode    => "755",
+			                  recurse => true,
+        		            purge   => true;
 
 		'/etc/skel/.bash_logout':
                         ensure  => present,

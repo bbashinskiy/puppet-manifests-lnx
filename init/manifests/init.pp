@@ -1,14 +1,4 @@
 class init::config {
-	$initfname = $operatingsystem ? {
-		'RedHat' => 'lnx_inittab',
-		'AIX' => 'aix_inittab',
-	}
-
-	$groupperm = $operatingsystem ? {
-                'RedHat' => 'root',
-                'AIX' => 'system',
-        }
-
 	file {
 		'/etc/rc.d':
                 ensure => directory,
@@ -25,21 +15,10 @@ class init::config {
 		source  => "puppet:///modules/init/$initfname";
 
 		'/etc/init.d':
-    		ensure => 'link',
-    		target => '/etc/rc.d/init.d',
-        }
-	
-	if $operatingsystem == 'AIX' {
-		file { '/etc/inetd.conf':
-			ensure => present,
-                	owner => 'root',
-                	group => "system",
-                	mode => '600',
-                	source  => "puppet:///modules/init/inetd.conf",
-		}
-	}
+    ensure => 'link',
+    target => '/etc/rc.d/init.d',
 }
 
 class init {
-	include init::config
+	  include init::config
 }

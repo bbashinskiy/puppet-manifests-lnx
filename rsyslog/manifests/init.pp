@@ -41,5 +41,5 @@ class rsyslog::config {
 
 class rsyslog {
         include rsyslog::install, rsyslog::config, rsyslog::service
-	Class['rsyslog::install'] -> Class['rsyslog::config'] ~> Class['rsyslog::service']
+	      Class['rsyslog::install'] -> Class['rsyslog::config'] ~> Class['rsyslog::service']
 }

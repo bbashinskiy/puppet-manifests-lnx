@@ -14,19 +14,19 @@ class logrotate::config {
                         source  => "puppet:///modules/logrotate/logrotate";
 
 		'/etc/logrotate.conf':
-                	ensure 	=> present,
-			owner	=> "root",
-			group	=> "root",
-			mode	=> "644",
-			source  => "puppet:///modules/logrotate/logrotate.conf";
+                	      ensure 	=> present,
+			                  owner	=> "root",
+			                  group	=> "root",
+			                  mode	=> "644",
+			                  source  => "puppet:///modules/logrotate/logrotate.conf";
 
 		'/etc/logrotate.d':
-			ensure  => directory,
-                	owner   => "root",
-                	group   => "root",
-                	mode    => "755",
-			recurse => true,
-        		purge   => true;
+			                  ensure  => directory,
+                	      owner   => "root",
+                	      group   => "root",
+                	      mode    => "755",
+			                  recurse => true,
+        		            purge   => true;
 
 		'/etc/logrotate.d/dracut':
                         ensure  => present,

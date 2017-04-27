@@ -2,13 +2,13 @@ class puppet::params {
 	$puppetserver = "dee1ans013ccpra.cmsalz.ibm.allianz"
 }
 
-class puppet::lnx_install {
+class puppet::install {
 	package {"puppet":
 		ensure => present,
 	}
 }
 
-class puppet::lnx_config {
+class puppet::config {
 	include puppet::params
 		
 	file { "/etc/puppet/puppet.conf":
@@ -23,8 +23,8 @@ class puppet::lnx_config {
                 ensure => present,
                 owner => "root",
                 group => "root",
-		mode	=> "644",
-		source	=> "puppet:///modules/puppet/auth.conf"
+		            mode	=> "644",
+		            source	=> "puppet:///modules/puppet/auth.conf"
         }
 	
 	file { "/etc/rsyslog.d/puppet.conf":
@@ -55,72 +55,22 @@ class puppet::lnx_config {
 	*/
 }
 
-class puppet::aix_config {
-	include puppet::params
-
-	file { 
-		'/etc/puppetlabs/puppet/puppet.conf':
-		ensure => present,
-		content => template('puppet/puppet.conf.erb'),
-		owner => "root",
-		group => "system",
-		mode    => "644";
-
-		"/etc/rc.d/init.d/puppet_agentd":
-                ensure => present,
-                owner => "root",
-                group => "system",
-		mode => 755,
-		source => "puppet:///modules/puppet/puppet-agentd";
-
-		'/etc/init.d/puppet':
-                ensure => "/etc/rc.d/init.d/puppet_agentd";
-
-		'/usr/bin/puppet':
-                ensure => "/opt/puppet/bin/puppet",
-        }
-	/*
-	file_line { 'add pupssh user under protection from erec ldap':
-  		path  => '/opt/eregldap/uar/configure/protectedid.dat',
-  		line  => 'pupssh',
-	}
-
-	file_line { 'add ip and host name of puppet server to /etc/hosts':
-                path  => '/etc/hosts',
-                line  => '10.17.163.175 dee1ans013ccpra.cmsalz.ibm.allianz dee1ans013ccpra',
-        }
-	*/
-}
-
 class puppet::puppetssh {
         group { 'pupssh':
                           ensure => 'present',
                           gid    => '2222',
         }
 
-	if $operatingsystem == 'RedHat' {
-		user { 'pupssh':
-			ensure           => 'present',
+		    user { 'pupssh':
+			            ensure           => 'present',
                 	gid              => '2222',
                 	home             => '/home/pupssh',
                 	password         => '!!',
                 	password_max_age => '99999',
                 	password_min_age => '0',
                 	uid              => '2222',
-                        shell            => '/bin/bash',
-		}
-        } elsif $operatingsystem == 'AIX' {
-		user { 'pupssh':
-			ensure           => 'present',
-                	gid              => '2222',
-                	home             => '/home/pupssh',
-                	password         => '!!',
-                	password_max_age => '99999',
-                	password_min_age => '0',
-                	uid              => '2222',
-                        shell            => '/bin/sh',
-		}
-        }
+                  shell            => '/bin/bash',
+		    }
 
         file {
                 '/home/pupssh':
@@ -143,34 +93,14 @@ class puppet::puppetssh {
         }
 }
 
-class puppet::lnx_service {
-	service { "puppet":
-		ensure => running,
-		enable => true,
-	}
+class puppet::service {
+	      service { "puppet":
+		        ensure => running,
+		        enable => true,
+	      }
 }
-
-class puppet::aix_service {
-	exec {"enable puppet service":
-		command => "ln -s /etc/rc.d/init.d/puppet_agentd /etc/rc.d/rc2.d/Spuppet_agentd",
-        	logoutput => "on_failure",
-        	path => "/bin",
-        	unless => 'ls -la /etc/rc.d/rc2.d/Spuppet_agentd',
-	}
-
-	service { "puppet":
-		ensure => running,
-		provider => init,
-	}
-}
-
 
 class puppet {
-	if $operatingsystem == 'RedHat' {
-		include puppet::puppetssh, puppet::lnx_install, puppet::lnx_config, puppet::lnx_service
-		Class['puppet::lnx_install'] -> Class['puppet::puppetssh'] -> Class['puppet::lnx_config'] ~> Class['puppet::lnx_service']
-	} elsif $operatingsystem == 'AIX' {
-		include puppet::puppetssh, puppet::aix_config, puppet::aix_service
-		Class['puppet::puppetssh'] -> Class['puppet::aix_config'] ~> Class['puppet::aix_service'] 
-	}
+		include puppet::puppetssh, puppet::install, puppet::config, puppet::service
+		Class['puppet::install'] -> Class['puppet::puppetssh'] -> Class['puppet::config'] ~> Class['puppet::service']
 }
